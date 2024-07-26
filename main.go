@@ -1,28 +1,18 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
-	"net/http"
-	"strings"
+	"gohub2/bootstrap"
 )
 
 func main() {
-	r := gin.New()
-	r.Use(gin.Logger(), gin.Recovery())
-	r.GET("/", func(ctx *gin.Context) {
-		ctx.JSON(http.StatusOK, gin.H{"Hello": "World!"})
-	})
+	router := gin.New()
+	bootstrap.SetupRoute(router)
 
-	r.NoRoute(func(ctx *gin.Context) {
-		acceptString := ctx.Request.Header.Get("Accept")
-		if strings.Contains(acceptString, "text/html") {
-			ctx.String(http.StatusNotFound, "页面返回404")
-		} else {
-			ctx.JSON(http.StatusNotFound, gin.H{
-				"error_code":    404,
-				"error_message": "路由未定义，请确认url和请求方法是否正确。",
-			})
-		}
-	})
-	r.Run(":8000")
+	err := router.Run(":3000")
+
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 }
