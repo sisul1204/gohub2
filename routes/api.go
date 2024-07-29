@@ -2,15 +2,18 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	"net/http"
+	"gohub2/app/http/controllers/v1/auth"
 )
 
 func RegisterAPIRoutes(r *gin.Engine) {
 
 	v1 := r.Group("/v1")
 	{
-		v1.GET("/", func(ctx *gin.Context) {
-			ctx.JSON(http.StatusOK, gin.H{"Hello": "World!"})
-		})
+		authGroup := v1.Group("/auth")
+		{
+			suc := new(auth.SignupController)
+			authGroup.POST("/signup/phone/exist", suc.IsPhoneExist)
+		}
+
 	}
 }
